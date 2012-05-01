@@ -29,7 +29,7 @@ If you want to understand more about OpenID source code, we suggest reading the 
 
 If you want to use OpenID in your web application, we suggest learning about OpenID integration with web frameworks and and authentication gems:
 
-  * [Our OpenID command-line demo](https://github.com/SixArm/sixarm_ruby_openid_tech_demo) - Like this app, yet independent of Rails.
+  * [Our Ruby OpenID tech demo for the command line](https://github.com/SixArm/sixarm_ruby_openid_tech_demo) - Like this app, yet independent of Rails.
   * [Rack::OpenID] (https://github.com/josh/rack-openid) - Provides a more HTTPish API around the ruby-openid library.
   * [OmniAuth OpenID](https://github.com/intridea/omniauth-openid) - Full authentication system with providers for OpenID, Facebook, Twitter, and many more.
   * [Supporting OpenID In Your Applications](http://danwebb.net/2007/2/27/the-no-shit-guide-to-supporting-openid-in-your-applications) - code for Rails 2.
