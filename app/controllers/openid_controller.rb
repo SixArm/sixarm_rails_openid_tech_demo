@@ -30,6 +30,7 @@ class OpenidController < ApplicationController
     # If no OpenID server is found, this raises a DiscoveryFailure.
 
     begin
+      Rails.logger.info "OpenidController#begin openid_url:#{openid_url} ..."
       checkid_request = openid_consumer_begin openid_url
       Rails.logger.info "OpenidController#begin openid_url:#{openid_url} success"
     rescue OpenID::DiscoveryFailure
@@ -50,7 +51,7 @@ class OpenidController < ApplicationController
     # <tt>return_to</tt> is the URL that the OpenID server will send
     # the user back to after attempting to verify his or her identity.
 
-    return_to = "#{root_url}openid/complete"
+    return_to = "#{root_url}openid/complete"  # e.g. "http://example.com/openid/complete" 
 
     # Next, you call the redirect_url method on the CheckIDRequest object.
     #

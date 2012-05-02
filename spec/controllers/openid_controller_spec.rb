@@ -10,7 +10,7 @@ describe OpenidController do
 
   # URLs that must match the controller
   let(:default_url) { "/openid" } 
-  let(:redirect_url) { "#{root_url}/openid/complete" } 
+  let(:redirect_url) { "#{root_url}openid/complete" } 
 
   describe "GET index" do
 
