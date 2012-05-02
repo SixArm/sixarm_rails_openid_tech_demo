@@ -29,11 +29,11 @@ class OpenidController < ApplicationController
     # If no OpenID server is found, this raises a DiscoveryFailure.
 
     begin
-      logger.info "OpenidController#begin openid_url:#{openid_url} ..."
+      logger.info "openid_url:#{openid_url} ..."
       checkid_request = openid_consumer_begin openid_url
-      logger.info "OpenidController#begin openid_url:#{openid_url} success"
+      logger.info "openid_url:#{openid_url} success"
     rescue OpenID::DiscoveryFailure
-      logger.info "OpenidController#begin openid_url:#{openid_url} failure"
+      logger.info "openid_url:#{openid_url} failure"
       flash[:error] = "Couldn't find an OpenID for that URL"
       redirect_to openid_root_path and return
     end
@@ -77,9 +77,9 @@ class OpenidController < ApplicationController
 
   # Complete the OpenID verification process
   def complete
-    logger.info "OpenidController#complete params:#{params.inspect} request.url:#{request.url}"
+    logger.info "params:#{params.inspect} request.url:#{request.url}"
     response = openid_consumer.complete(params_for_openid(params), request.url)
-    logger.info "OpenidController#complete response.status:#{response.status}"
+    logger.info "response.status:#{response.status}"
 
     # Handle the response.
     #
@@ -89,20 +89,20 @@ class OpenidController < ApplicationController
 
     case response.status
     when OpenID::Consumer::SUCCESS
-      Rails.logger.info "OpenidController#complete success"
+      logger.info "SUCCESS response.identity_url:#{response.identity_url}"
       session[:openid] = response.identity_url
       flash[:notice] = "Success. You are signed in."
       redirect_to root_path and return
     when OpenID::Consumer::FAILURE
-      Rails.logger.info "OpenidController#complete failure endpoint:#{response.endpoint||'?'} message: #{response.message||'?'} contact: #{response.contact||'?'}"
-      flash[:error] = "Failure. You are not signed in."
+      logger.info "FAILURE endpoint:#{response.endpoint||'?'} message:#{response.message||'?'} contact:#{response.contact||'?'}"
+      flash[:error] = "Failure. You are not signed in. #{response.message||'?'}"
       redirect_to openid_root_path and return
     when OpenID::Consumer::CANCEL
-      Rails.logger.info "OpenidController#complete cancel"
+      logger.info "CANCEL request.url:#{request.url}"
       flash[:notice] = "Cancelled. You are not signed in."
       redirect_to openid_root_path and return
     when OpenID::Consumer::SETUP_NEEDED
-      Rails.logger.info "OpenidController#complete setup needed"
+      logger.info "SETUP_NEEDED request.url:#{request.url}"
       flash[:error] = "Setup Needed. This is not yet supported"
       redirect_to openid_root_path and return
     else
