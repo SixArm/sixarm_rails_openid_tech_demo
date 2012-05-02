@@ -77,7 +77,7 @@ class OpenidController < ApplicationController
   # Complete the OpenID verification process
   def complete
     Rails.logger.info "OpenidController#complete params:#{params.inspect} request.url:#{request.url}"
-    response = openid_consumer.complete params request.url
+    response = openid_consumer.complete(params, request.url)
     Rails.logger.info "OpenidController#complete response.status:#{response.status}"
 
     # Handle the response.
