@@ -6,11 +6,7 @@ describe OpenidController do
   let(:consumer) { double("OpenID::Consumer") }
   let(:checkid_request) { double ("OpenID::Consumer::CheckIDRequest") }
   let(:response) { double ("OpenID::Consumer::Response") }
-  let(:openid_url) { "http://example.com" }
-
-  # URLs that must match the controller
-  let(:default_url) { "/openid" } 
-  let(:redirect_url) { "#{root_url}openid/complete" } 
+  let(:openid_url_string) { "http://example.com" }
 
   describe "GET index" do
 
@@ -25,7 +21,7 @@ describe OpenidController do
 
     before do
       OpenID::Consumer.stub(:new) { consumer }
-      checkid_request.stub(:redirect_url) { redirect_url }
+      checkid_request.stub(:redirect_url) { openid_complete_url }
     end
 
     context "with a valid openid url" do
@@ -37,12 +33,15 @@ describe OpenidController do
 
       it "begins" do
         OpenID::Consumer.should_receive(:new).with(kind_of(Hash), nil)
-        consumer.should_receive(:begin).with(openid_url)
+        consumer.should_receive(:begin).with(openid_url_string)
         checkid_request.should_receive(:redirect_url).with(kind_of(String), kind_of(String))
-        post :begin, :openid_url => openid_url
+
+        post :begin, :openid_url => openid_url_string
+
         flash[:notice].should == nil
         flash[:error].should == nil
-        response.should redirect_to redirect_url
+        response.should redirect_to openid_complete_url
+
       end
 
     end
@@ -56,11 +55,13 @@ describe OpenidController do
 
       it "begins" do
         OpenID::Consumer.should_receive(:new).with(kind_of(Hash), nil)
-        consumer.should_receive(:begin).with(openid_url)
-        post :begin, "openid_url" => openid_url
+        consumer.should_receive(:begin).with(openid_url_string)
+
+        post :begin, "openid_url" => openid_url_string
+
         flash[:notice].should == nil
         flash[:error].should ==  "Couldn't find an OpenID for that URL"
-        response.should redirect_to default_url
+        response.should redirect_to openid_root_path
       end
 
     end
@@ -69,9 +70,10 @@ describe OpenidController do
 
       it "redirects to the index page to try again" do
         post :begin, "openid_url" => ""
+
         flash[:notice].should == nil
         flash[:error].should =~ /^To use this/
-        response.should redirect_to default_url
+        response.should redirect_to openid_root_path
       end
 
     end
@@ -118,7 +120,7 @@ describe OpenidController do
         get :complete, {}
         flash[:notice].should == nil
         flash[:error].should =~ /^Failure/
-        response.should redirect_to default_url
+        response.should redirect_to openid_root_path
       end
 
     end
@@ -135,7 +137,7 @@ describe OpenidController do
         get :complete, {}
         flash[:notice].should =~ /^Cancel/
         flash[:error].should == nil
-        response.should redirect_to default_url
+        response.should redirect_to openid_root_path
       end
 
     end
@@ -152,7 +154,7 @@ describe OpenidController do
         get :complete, {}
         flash[:notice].should == nil
         flash[:error].should =~ /^Setup/
-        response.should redirect_to default_url
+        response.should redirect_to openid_root_path
       end
 
     end

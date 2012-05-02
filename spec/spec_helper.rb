@@ -8,6 +8,9 @@ require 'rspec/autorun'
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
+# Provide a default host for absolution named routes e.g. foo_url.
+Rails.application.routes.default_url_options = { :host => "test.host" }
+
 RSpec.configure do |config|
   # ## Mock Framework
   #
@@ -29,4 +32,8 @@ RSpec.configure do |config|
   # automatically. This will be the default behavior in future versions of
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = false
+
 end
+
+
+

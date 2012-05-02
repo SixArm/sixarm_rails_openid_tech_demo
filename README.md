@@ -36,6 +36,19 @@ If you want to use OpenID in your web application, we suggest learning about Ope
   * [Minimal OpenID glue for Rails authentication](http://anthonybailey.livejournal.com/35207.html) - code for Rails 2.
 
 
+## Troubleshooting SessionRestoreError
+
+If you get an error like this:
+
+  * ActionDispatch::Session::SessionRestoreError
+
+Then you need to clear out the session store. This demo uses the in-memory cookie store because it is more secure on multi-app systems, and the easiest way to clear out the session store is to invalidate the existing cookies by changing the app's secret token:
+
+  * Edit <code>config/initializers/secret_token.rb
+  * Change the token to anything different.
+  * Restart the server.
+
+
 ## Credits
 
 The Ruby OpenID gem is by JanRain, and it has excellent code with comments and examples. This demo is derived from the gem.

@@ -14,8 +14,7 @@ class OpenidController < ApplicationController
 
     if openid_url.blank?
       flash[:error] = "To use this, please type in the box."
-      redirect_to '/openid'
-      return
+      redirect_to openid_root_path and return
     end
 
     # We begin using the consumer with the user's OpenID URL.
@@ -30,14 +29,13 @@ class OpenidController < ApplicationController
     # If no OpenID server is found, this raises a DiscoveryFailure.
 
     begin
-      Rails.logger.info "OpenidController#begin openid_url:#{openid_url} ..."
+      logger.info "OpenidController#begin openid_url:#{openid_url} ..."
       checkid_request = openid_consumer_begin openid_url
-      Rails.logger.info "OpenidController#begin openid_url:#{openid_url} success"
+      logger.info "OpenidController#begin openid_url:#{openid_url} success"
     rescue OpenID::DiscoveryFailure
-      Rails.logger.info "OpenidController#begin openid_url:#{openid_url} failure"
+      logger.info "OpenidController#begin openid_url:#{openid_url} failure"
       flash[:error] = "Couldn't find an OpenID for that URL"
-      redirect_to '/openid'
-      return
+      redirect_to openid_root_path and return
     end
 
     # <tt>realm</tt> is the URL (or URL pattern) that identifies
@@ -51,7 +49,7 @@ class OpenidController < ApplicationController
     # <tt>return_to</tt> is the URL that the OpenID server will send
     # the user back to after attempting to verify his or her identity.
 
-    return_to = "#{root_url}openid/complete"  # e.g. "http://example.com/openid/complete" 
+    return_to = openid_complete_url  # e.g. "http://example.com/openid/complete" 
 
     # Next, you call the redirect_url method on the CheckIDRequest object.
     #
@@ -73,15 +71,15 @@ class OpenidController < ApplicationController
     #
     # These next steps are done in the other program in this directory.
 
-    redirect_to url
+    redirect_to url and return
 
   end
 
   # Complete the OpenID verification process
   def complete
-    Rails.logger.info "OpenidController#complete params:#{params.inspect} request.url:#{request.url}"
+    logger.info "OpenidController#complete params:#{params.inspect} request.url:#{request.url}"
     response = openid_consumer.complete(params_for_openid(params), request.url)
-    Rails.logger.info "OpenidController#complete response.status:#{response.status}"
+    logger.info "OpenidController#complete response.status:#{response.status}"
 
     # Handle the response.
     #
@@ -94,19 +92,19 @@ class OpenidController < ApplicationController
       Rails.logger.info "OpenidController#complete success"
       session[:openid] = response.identity_url
       flash[:notice] = "Success. You are signed in."
-      redirect_to root_path
+      redirect_to root_path and return
     when OpenID::Consumer::FAILURE
       Rails.logger.info "OpenidController#complete failure endpoint:#{response.endpoint||'?'} message: #{response.message||'?'} contact: #{response.contact||'?'}"
       flash[:error] = "Failure. You are not signed in."
-      redirect_to '/openid'
+      redirect_to openid_root_path and return
     when OpenID::Consumer::CANCEL
       Rails.logger.info "OpenidController#complete cancel"
       flash[:notice] = "Cancelled. You are not signed in."
-      redirect_to '/openid'
+      redirect_to openid_root_path and return
     when OpenID::Consumer::SETUP_NEEDED
       Rails.logger.info "OpenidController#complete setup needed"
       flash[:error] = "Setup Needed. This is not yet supported"
-      redirect_to '/openid'
+      redirect_to openid_root_path and return
     else
       raise "Response not recognized: response.class:#{response.class}"
     end
@@ -123,7 +121,6 @@ class OpenidController < ApplicationController
   end
 
   def openid_consumer_begin(openid_url)
-    Rails.logger.info "OpenidController#begin openid_url:#{openid_url}"
     openid_consumer.begin openid_url
   end
 
