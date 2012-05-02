@@ -76,7 +76,9 @@ class OpenidController < ApplicationController
 
   # Complete the OpenID verification process
   def complete
-    response = openid_consumer.complete params
+    Rails.logger.info "OpenidController#complete params:#{params.inspect} #{request.url}"
+    response = openid_consumer.complete params request.url
+    Rails.logger.info "OpenidController#complete response.status:#{response.status}"
 
     # Handle the response.
     #
@@ -86,16 +88,20 @@ class OpenidController < ApplicationController
 
     case response.status
     when OpenID::Consumer::SUCCESS
+      Rails.logger.info "OpenidController#complete success"
       session[:openid] = response.identity_url
       flash[:notice] = "Success. You are signed in."
       redirect_to root_path
     when OpenID::Consumer::FAILURE
+      Rails.logger.info "OpenidController#complete failure"
       flash[:error] = "Failure: endpoint: #{response.endpoint||'?'} message: #{response.message} contact: #{response.contact}"
       redirect_to '/openid'
     when OpenID::Consumer::CANCEL
+      Rails.logger.info "OpenidController#complete cancel"
       flash[:notice] = "Cancelled. You are not signed in."
       redirect_to '/openid'
     when OpenID::Consumer::SETUP_NEEDED
+      Rails.logger.info "OpenidController#complete setup needed"
       flash[:error] = "Setup Needed. This is not yet supported"
       redirect_to '/openid'
     else
