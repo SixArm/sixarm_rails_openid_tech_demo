@@ -2,6 +2,8 @@ require 'openid'
 
 class OpenidController < ApplicationController
 
+  include OpenidHelper
+
   # Show a form requesting the user's OpenID
   def index
   end
@@ -77,7 +79,7 @@ class OpenidController < ApplicationController
   # Complete the OpenID verification process
   def complete
     Rails.logger.info "OpenidController#complete params:#{params.inspect} request.url:#{request.url}"
-    response = openid_consumer.complete(params, request.url)
+    response = openid_consumer.complete(params_for_openid(params), request.url)
     Rails.logger.info "OpenidController#complete response.status:#{response.status}"
 
     # Handle the response.
@@ -93,8 +95,8 @@ class OpenidController < ApplicationController
       flash[:notice] = "Success. You are signed in."
       redirect_to root_path
     when OpenID::Consumer::FAILURE
-      Rails.logger.info "OpenidController#complete failure"
-      flash[:error] = "Failure: endpoint: #{response.endpoint||'?'} message: #{response.message} contact: #{response.contact}"
+      Rails.logger.info "OpenidController#complete failure endpoint:#{response.endpoint||'?'} message: #{response.message||'?'} contact: #{response.contact||'?'}"
+      flash[:error] = "Failure. You are not signed in."
       redirect_to '/openid'
     when OpenID::Consumer::CANCEL
       Rails.logger.info "OpenidController#complete cancel"

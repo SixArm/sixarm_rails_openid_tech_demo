@@ -93,7 +93,7 @@ describe OpenidController do
 
       before do
         response.stub(:status) { OpenID::Consumer::SUCCESS }
-        consumer.should_receive(:complete).with(kind_of(Hash))
+        consumer.should_receive(:complete).with(kind_of(Hash), kind_of(String))
         response.should_receive(:identity_url)
       end
 
@@ -110,7 +110,7 @@ describe OpenidController do
 
       before do
         response.stub(:status) { OpenID::Consumer::FAILURE }
-        consumer.should_receive(:complete).with(kind_of(Hash))
+        consumer.should_receive(:complete).with(kind_of(Hash), kind_of(String))
         response.should_not_receive(:identity_url)
       end
 
@@ -127,7 +127,7 @@ describe OpenidController do
       
       before do
         response.stub(:status) { OpenID::Consumer::CANCEL }
-        consumer.should_receive(:complete).with(kind_of(Hash))
+        consumer.should_receive(:complete).with(kind_of(Hash), kind_of(String))
         response.should_not_receive(:identity_url)
       end
 
@@ -144,7 +144,7 @@ describe OpenidController do
 
       before do
         response.stub(:status) { OpenID::Consumer::SETUP_NEEDED }
-        consumer.should_receive(:complete).with(kind_of(Hash))
+        consumer.should_receive(:complete).with(kind_of(Hash), kind_of(String))
         response.should_not_receive(:identity_url)
       end
       

@@ -1,15 +1,14 @@
 require 'spec_helper'
 
-# Specs in this file have access to a helper object that includes
-# the OpenidHelper. For example:
-#
-# describe OpenidHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       helper.concat_strings("this","that").should == "this that"
-#     end
-#   end
-# end
 describe OpenidHelper do
-  #pending "add some examples to (or delete) #{__FILE__}"
+
+  describe "#params_for_openid" do
+
+    it "returns exactly the params with keys that start with 'openid.'" do
+      params = {'openid.foo' => 'a', 'hello' => 'world', 'openid.goo' => 'b'}
+      params_for_openid(params).should == {'openid.foo' =>'a', 'openid.goo' => 'b'}
+    end
+
+  end
+
 end
