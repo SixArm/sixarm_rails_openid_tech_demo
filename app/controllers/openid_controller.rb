@@ -48,7 +48,7 @@ class OpenidController < ApplicationController
     # <tt>return_to</tt> is the URL that the OpenID server will send
     # the user back to after attempting to verify his or her identity.
 
-    return_to = "#{root_url}/openid/complete"
+    return_to = "#{root_url}openid/complete"
 
     # Next, you call the redirect_url method on the CheckIDRequest object.
     #
