@@ -3,5 +3,5 @@ Demo::Application.routes.draw do
   get "openid" => "openid#index"
   post "openid/foo" => "openid#foo"
   post "openid/begin" => "openid#begin"
-  get "openid/complete" => "openid#create"
+  get "openid/complete" => "openid#complete"
 end
