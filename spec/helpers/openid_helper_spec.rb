@@ -9,6 +9,10 @@ describe OpenidHelper do
       params_for_openid(params).should == {'openid.foo' =>'a', 'openid.goo' => 'b'}
     end
 
+    it "preserves the params class as HashWithIndifferentAccess" do
+      params_for_openid(HashWithIndifferentAccess.new).should be_a_kind_of(HashWithIndifferentAccess)
+    end
+
   end
 
 end

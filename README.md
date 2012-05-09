@@ -36,6 +36,15 @@ If you want to use OpenID in your web application, we suggest learning about Ope
   * [Minimal OpenID glue for Rails authentication](http://anthonybailey.livejournal.com/35207.html) - code for Rails 2.
 
 
+## Google OpenID variations
+
+Google provides a unique ID that is independent of the user's name and email address:
+
+http://code.google.com/apis/accounts/docs/OpenID.html
+
+The Google-supplied identifier, which has no connection to the user's actual Google account name or password, is a persistent value; it remains constant even if the user changes their Google user name and/or email address. This identifier is also a "directed identity", that is, Google returns a different value to each relying party. Google uses the request parameter openid.realm to recognize the relying party, so if the third-party application decides to change this value, all user identifiers will change.
+
+
 ## Troubleshooting SessionRestoreError
 
 If you get an error like this:

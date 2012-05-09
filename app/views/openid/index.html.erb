@@ -1,8 +1,15 @@
+<!-- show flash messages, if any -->
+
 <% if flash[:notice] %><p><font color=green><%= flash[:notice] -%></font></p><% end %>
 <% if flash[:notice] %><p><font color=red><%= flash[:error] -%></font></p><% end %>
+
+
+<!-- show input form -->
 
 Please enter your OpenID URL:
 <%= form_tag '/openid/begin' do %>
   <%= text_field_tag 'openid_url', '', :size => 60 %>
   <br><%= submit_tag 'Sign In' %>
 <% end %>
+
+

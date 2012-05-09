@@ -30,7 +30,7 @@ class OpenidController < ApplicationController
 
     begin
       logger.info "openid_url:#{openid_url} ..."
-      checkid_request = openid_consumer_begin openid_url
+      checkid_request = openid_consumer.begin openid_url
       logger.info "openid_url:#{openid_url} success"
     rescue OpenID::DiscoveryFailure
       logger.info "openid_url:#{openid_url} failure"
@@ -79,7 +79,7 @@ class OpenidController < ApplicationController
   def complete
     logger.info "params:#{params.inspect} request.url:#{request.url}"
     response = openid_consumer.complete(params_for_openid(params), request.url)
-    logger.info "response.status:#{response.status}"
+    logger.info "response:#{response.inspect}"
 
     # Handle the response.
     #
@@ -90,8 +90,9 @@ class OpenidController < ApplicationController
     case response.status
     when OpenID::Consumer::SUCCESS
       logger.info "SUCCESS response.identity_url:#{response.identity_url}"
+      @identity_url = response.identity_url
       session[:openid] = response.identity_url
-      flash[:notice] = "Success. You are signed in."
+      flash[:notice] = "Success. You are signed in: #{@identity_url}"
       redirect_to root_path and return
     when OpenID::Consumer::FAILURE
       logger.info "FAILURE endpoint:#{response.endpoint||'?'} message:#{response.message||'?'} contact:#{response.contact||'?'}"
@@ -120,9 +121,6 @@ class OpenidController < ApplicationController
     @openid_consumer ||= OpenID::Consumer.new(session, nil)
   end
 
-  def openid_consumer_begin(openid_url)
-    openid_consumer.begin openid_url
-  end
 
   # <tt>google openid url</tt> is how google looks up accounts.
   # The user must be signed in to Google (e.g. Gmail) already.
