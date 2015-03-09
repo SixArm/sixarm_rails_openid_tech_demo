@@ -1,4 +1,4 @@
-# SixArm.com » Rails » OpenID » Tech demo for programmers
+# Rails » OpenID » Tech demo for programmers
 
 This Rails OpenID tech demo shows a simple example of authentication using Rails 3, RSpec 2, and the ruby-openid gem.
 
